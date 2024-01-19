@@ -34,7 +34,7 @@ namespace FileManagerAPI
                 options.AddPolicy("AllowSpecificOrigins",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:4200")
+                        builder.WithOrigins("http://localhost:4200", "https://red-meadow-0d468f610.4.azurestaticapps.net/")
                                .AllowAnyHeader()
                                .AllowAnyMethod();
                     });
