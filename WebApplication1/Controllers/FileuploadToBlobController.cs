@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FileManagerAPI.Controllers
 {
-    [Route("api/[controller]")]
+   
     [ApiController]
     public class FileuploadToBlobController : ControllerBase
     {
@@ -19,14 +19,26 @@ namespace FileManagerAPI.Controllers
             _service = service;
         }
 
-        [HttpPost]
+        [HttpPost]        
+        [Route("/UploadFiles")]
         public async Task<IActionResult> UploadBlobs(List<IFormFile> files)
         {
             var response = await _service.UploadFiles(files);
             return Ok(response);
         }
 
+        [HttpPost]
+        [Route("/UploadAFile")]
+        public async Task<IActionResult> UploadBlob(IFormFile file)
+        {
+            var fileList = new List<IFormFile>();
+            fileList.Add(file);
+            var response = await _service.UploadFiles(fileList);
+            return Ok(response);
+        }
+
         [HttpGet]
+        [Route("/GetFiles")]
         public async Task<IActionResult> GetAllBlobs()
         {
             var response = await _service.GetUploadedBlobs();

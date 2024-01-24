@@ -7,10 +7,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FileManagerAPI.Model;
 
 namespace FileManagerAPI
 {
@@ -39,6 +41,31 @@ namespace FileManagerAPI
                                .AllowAnyMethod();
                     });
             });
+            services.Configure<AzureStorage>(Configuration.GetSection("AzureStorage"));
+
+            services.AddSwaggerGen(options =>
+                {
+                    options.SwaggerDoc("v1", new OpenApiInfo
+                    {
+                        Version = "v1",
+                        Title = "Azure Container File manager",
+                        Description = "File manager APIs to upload and download files from Azure blob storage",
+                        TermsOfService = new Uri("https://example.com/terms")
+                        
+                        //Contact = new OpenApiContact
+                        //{
+                        //    Name = "Example Contact",
+                        //    Url = new Uri("https://example.com/contact")
+                        //},
+                        //License = new OpenApiLicense
+                        //{
+                        //    Name = "Example License",
+                        //    Url = new Uri("https://example.com/license")
+                        //}
+                    });
+                });
+
+            
             //services.AddScoped<IAzureBlobService, AzureBlobService>();
 
         }
@@ -49,6 +76,14 @@ namespace FileManagerAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                    options.RoutePrefix = string.Empty;
+                    //options.DocumentTitle = "Azure Container File manager";
+                    //options.
+                });
             }
 
             app.UseHttpsRedirection();
@@ -58,6 +93,7 @@ namespace FileManagerAPI
             app.UseAuthorization();
 
             app.UseCors("AllowSpecificOrigins");
+
 
             app.UseEndpoints(endpoints =>
             {

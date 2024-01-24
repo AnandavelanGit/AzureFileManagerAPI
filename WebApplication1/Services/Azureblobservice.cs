@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using FileManagerAPI;
+using Microsoft.Extensions.Configuration;
+using FileManagerAPI.Model;
+using Microsoft.Extensions.Options;
 
 namespace AzureBlob.API.Service
 {
@@ -13,12 +16,24 @@ namespace AzureBlob.API.Service
         BlobClient _blobClient;
         BlobServiceClient _blobServiceClient;
         BlobContainerClient _containerClient;
-        string azureConnectionString = "DefaultEndpointsProtocol=https;AccountName=aadhiraistorage;AccountKey=mmXihU7Zw8EXUPnZ6w+LfiIuoUzasdcgtT/GjIDUFBVPOwrwAkCuFwbTsgIj4Js/V/dt9+4dd5Qn+AStVMR4fQ==;EndpointSuffix=core.windows.net";
-        string azurecontainer = "aadhidocuments";
-        public AzureBlobService()
+        IConfiguration configuration;
+        AzureStorage _azstore;
+        //string azureConnectionString; //= "DefaultEndpointsProtocol=https;AccountName=aadhiraistorage;AccountKey=mmXihU7Zw8EXUPnZ6w+LfiIuoUzasdcgtT/GjIDUFBVPOwrwAkCuFwbTsgIj4Js/V/dt9+4dd5Qn+AStVMR4fQ==;EndpointSuffix=core.windows.net";
+        //string azurecontainer; // = "aadhidocuments";
+        
+        public AzureBlobService(IOptions<AzureStorage> options)
         {
-            _blobServiceClient = new BlobServiceClient(azureConnectionString);
-            _containerClient = _blobServiceClient.GetBlobContainerClient(azurecontainer);
+            this._azstore = options.Value;
+            this.getAzureConnections();
+        }
+
+        private void getAzureConnections()
+        {
+           // configuration.Bind("AzureStorage", this._azstore);
+            _blobServiceClient = new BlobServiceClient($"DefaultEndpointsProtocol={this._azstore.DefaultEndpointsProtocol};" +
+                $"AccountName={this._azstore.AccountName};AccountKey={this._azstore.AccountKey};EndpointSuffix={this._azstore.EndpointSuffix};");
+            _containerClient = _blobServiceClient.GetBlobContainerClient(this._azstore.Container);
+
         }
 
         public async Task<List<Azure.Response<BlobContentInfo>>> UploadFiles(List<IFormFile> files)
