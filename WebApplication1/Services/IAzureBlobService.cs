@@ -9,10 +9,13 @@ namespace AzureBlob.API.Service
 {
     public interface IAzureBlobService
     {
+        public string Container { get; set; }
         Task<List<FileProperties>> GetUploadedBlobs();
         Task<List<Response<BlobContentInfo>>> UploadFiles(List<IFormFile> files);
 
         Task<byte[]> DownloadFileFromBlob(string blobname);
+
+         Task<List<string>> ListContainers();
     }
 
 }

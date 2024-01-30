@@ -18,4 +18,12 @@ namespace FileManagerAPI.Model
         public string Container { get; set; }
 
     }
+
+    public class AzureKeyVault
+    {
+        public string Url { get; set; }
+
+        public string KeyName { get; set; }
+
+    }
 }

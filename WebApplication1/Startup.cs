@@ -43,6 +43,8 @@ namespace FileManagerAPI
             });
             services.Configure<AzureStorage>(Configuration.GetSection("AzureStorage"));
 
+            services.Configure<AzureKeyVault>(Configuration.GetSection("AzureKeyVault"));
+
             services.AddSwaggerGen(options =>
                 {
                     options.SwaggerDoc("v1", new OpenApiInfo

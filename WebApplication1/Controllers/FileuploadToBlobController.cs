@@ -29,8 +29,9 @@ namespace FileManagerAPI.Controllers
 
         [HttpPost]
         [Route("/UploadAFile")]
-        public async Task<IActionResult> UploadBlob(IFormFile file)
+        public async Task<IActionResult> UploadBlob(IFormFile file, [FromForm] string container)
         {
+            _service.Container = container;
             var fileList = new List<IFormFile>();
             fileList.Add(file);
             var response = await _service.UploadFiles(fileList);
@@ -46,11 +47,28 @@ namespace FileManagerAPI.Controllers
         }
 
         [HttpGet]
+        [Route("/GetFiles/{container}")]
+        public async Task<IActionResult> GetAllBlobs(string container)
+        {
+            _service.Container = container;
+            var response = await _service.GetUploadedBlobs();
+            return Ok(response);
+        }
+
+        [HttpGet]
         [Route("/DownloadBlob/{blobname}")]
         public async Task<IActionResult> DownloadBlob(string blobname)
         {
             var blobbyte = await _service.DownloadFileFromBlob(blobname);
             return File(blobbyte, "application/octet-stream", blobname);
+        }
+
+        [HttpGet]
+        [Route("/GetContainers")]
+        public async Task<IActionResult> GetAllContainers()
+        {
+            var response = await _service.ListContainers();
+            return Ok(response);
         }
 
     }
