@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'filemanageapi'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4E61C5E28A654EE48877EFC13E5A1CA6 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_43CC99C719B849508CC12B8A60CF9582 }}
           package: .
