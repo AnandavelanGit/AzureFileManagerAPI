@@ -1,6 +1,9 @@
 ﻿using AzureBlob.API.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.Resource;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +11,9 @@ using System.Threading.Tasks;
 
 namespace FileManagerAPI.Controllers
 {
-   
+
     [ApiController]
+    [Authorize]
     public class FileuploadToBlobController : ControllerBase
     {
 
@@ -19,8 +23,10 @@ namespace FileManagerAPI.Controllers
             _service = service;
         }
 
-        [HttpPost]        
+        [HttpPost]
         [Route("/UploadFiles")]
+
+        // [Authorize(Roles = "FileManager.ReadWrite")]
         public async Task<IActionResult> UploadBlobs(List<IFormFile> files)
         {
             var response = await _service.UploadFiles(files);
@@ -29,6 +35,7 @@ namespace FileManagerAPI.Controllers
 
         [HttpPost]
         [Route("/UploadAFile")]
+        //[Authorize(Roles = "FileManager.ReadWrite")]
         public async Task<IActionResult> UploadBlob(IFormFile file, [FromForm] string container)
         {
             _service.Container = container;
@@ -40,6 +47,8 @@ namespace FileManagerAPI.Controllers
 
         [HttpGet]
         [Route("/GetFiles")]
+        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+        // [Authorize(Roles = "FileManager.Read,FileManager.ReadWrite")]
         public async Task<IActionResult> GetAllBlobs()
         {
             var response = await _service.GetUploadedBlobs();
@@ -48,6 +57,8 @@ namespace FileManagerAPI.Controllers
 
         [HttpGet]
         [Route("/GetFiles/{container}")]
+        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+        //[Authorize(Roles = "FileManager.Read,FileManager.ReadWrite")]
         public async Task<IActionResult> GetAllBlobs(string container)
         {
             _service.Container = container;
@@ -57,6 +68,8 @@ namespace FileManagerAPI.Controllers
 
         [HttpGet]
         [Route("/DownloadBlob/{blobname}")]
+        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+        //[Authorize(Roles = "FileManager.ReadWrite")]
         public async Task<IActionResult> DownloadBlob(string blobname)
         {
             var blobbyte = await _service.DownloadFileFromBlob(blobname);
@@ -65,6 +78,8 @@ namespace FileManagerAPI.Controllers
 
         [HttpGet]
         [Route("/GetContainers")]
+        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+        // [Authorize(Roles = "FileManager.Read,FileManager.ReadWrite")]
         public async Task<IActionResult> GetAllContainers()
         {
             var response = await _service.ListContainers();
