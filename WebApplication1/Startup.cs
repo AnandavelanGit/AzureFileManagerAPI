@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FileManagerAPI.Model;
+using Microsoft.Identity.Web;
+using Microsoft.IdentityModel;
 
 namespace FileManagerAPI
 {
@@ -28,6 +30,7 @@ namespace FileManagerAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMicrosoftIdentityWebApiAuthentication(Configuration);
             services.AddControllers();
             services.AddSingleton<IAzureBlobService, AzureBlobService>();
 
@@ -91,6 +94,8 @@ namespace FileManagerAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
