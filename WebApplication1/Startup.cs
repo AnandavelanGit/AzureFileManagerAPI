@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using FileManagerAPI.Model;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel;
+using FileManagerAPI.Services;
 
 namespace FileManagerAPI
 {
@@ -33,6 +34,8 @@ namespace FileManagerAPI
             services.AddMicrosoftIdentityWebApiAuthentication(Configuration);
             services.AddControllers();
             services.AddSingleton<IAzureBlobService, AzureBlobService>();
+            services.AddTransient<IAzureSecretQuestions, AzureSecretQuestions>();
+            services.AddTransient<IAzureTableService, AzureTableService>();
 
             services.AddCors(options =>
             {
@@ -47,6 +50,10 @@ namespace FileManagerAPI
             services.Configure<AzureStorage>(Configuration.GetSection("AzureStorage"));
 
             services.Configure<AzureKeyVault>(Configuration.GetSection("AzureKeyVault"));
+
+            services.Configure<SQLConnections>(Configuration.GetSection("SQLConnections"));
+            services.Configure<AZTableStorage>(Configuration.GetSection("AZTableStorage"));
+
 
             services.AddSwaggerGen(options =>
                 {
