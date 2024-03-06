@@ -26,4 +26,16 @@ namespace FileManagerAPI.Model
         public string KeyName { get; set; }
 
     }
+
+    public class SQLConnections
+    {
+        public string AzureConString { get; set; }
+
+    }
+
+    public class AZTableStorage
+    {
+        public string AzureConString { get; set; }
+
+    }
 }
