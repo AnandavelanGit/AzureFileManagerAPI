@@ -33,9 +33,9 @@ namespace FileManagerAPI
         {
             services.AddMicrosoftIdentityWebApiAuthentication(Configuration);
             services.AddControllers();
-            services.AddSingleton<IAzureBlobService, AzureBlobService>();
-            services.AddTransient<IAzureSecretQuestions, AzureSecretQuestions>();
-            services.AddTransient<IAzureTableService, AzureTableService>();
+            services.AddScoped<IAzureBlobService, AzureBlobService>();
+            services.AddScoped<IAzureSecretQuestions, AzureSecretQuestions>();
+            services.AddScoped<IAzureTableService, AzureTableService>();
 
             services.AddCors(options =>
             {
