@@ -1,4 +1,5 @@
-﻿using AzureBlob.API.Service;
+﻿using Azure;
+using AzureBlob.API.Service;
 using FileManagerAPI.Model;
 using FileManagerAPI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,7 @@ namespace FileManagerAPI.Controllers
 
         [HttpPost]
         [Route("/UploadFiles")]
+        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 
         // [Authorize(Roles = "FileManager.ReadWrite")]
         public async Task<IActionResult> UploadBlobs(List<IFormFile> files)
@@ -44,6 +46,7 @@ namespace FileManagerAPI.Controllers
 
         [HttpPost]
         [Route("/UploadAFile")]
+        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
         //[Authorize(Roles = "FileManager.ReadWrite")]
         public async Task<IActionResult> UploadBlob(IFormFile file, [FromForm] string container)
         {
@@ -52,6 +55,30 @@ namespace FileManagerAPI.Controllers
             fileList.Add(file);
             var response = await _service.UploadFiles(fileList);
             return Ok(response);
+        }
+
+        [HttpDelete]
+        [Route("/DeleteFile")]
+        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+        //[Authorize(Roles = "FileManager.ReadWrite")]
+        public async Task<IActionResult> DeleteBlob(string filename, string container)
+        {
+            try
+            {
+                _service.Container = container;
+                var response = await _service.DeleteBlobAsync(filename);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                if (ex is RequestFailedException && ex.Message.Contains("The specified blob does not exist"))
+                {
+                    return NotFound();
+
+                }
+                else
+                { throw; }
+            }
         }
 
         [HttpGet]
@@ -97,7 +124,7 @@ namespace FileManagerAPI.Controllers
 
         [HttpGet]
         [Route("/GetSecretQuestions")]
-        //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
         // [Authorize(Roles = "FileManager.Read,FileManager.ReadWrite")]
         public IActionResult GetAllQuestion()
         {
@@ -107,7 +134,7 @@ namespace FileManagerAPI.Controllers
 
         [HttpGet]
         [Route("/GetSecretQuestions2")]
-        //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
         // [Authorize(Roles = "FileManager.Read,FileManager.ReadWrite")]
         public async Task<IActionResult> GetAllQuestion2()
         {
@@ -117,7 +144,7 @@ namespace FileManagerAPI.Controllers
 
         [HttpPost]
         [Route("/CheckAnswers")]
-        //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
         // [Authorize(Roles = "FileManager.Read,FileManager.ReadWrite")]
         public async Task<IActionResult> CheckAnswers([FromBody] List<QA> QAs)
         {
