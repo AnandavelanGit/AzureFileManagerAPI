@@ -16,6 +16,8 @@ namespace AzureBlob.API.Service
         Task<byte[]> DownloadFileFromBlob(string blobname);
 
          Task<List<string>> ListContainers();
+
+        Task<Response> DeleteBlobAsync(string blobname);
     }
 
 }

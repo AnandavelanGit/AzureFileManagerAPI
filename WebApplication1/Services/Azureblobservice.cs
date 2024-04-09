@@ -13,6 +13,8 @@ using System;
 using Azure.Identity;
 using Azure.Core;
 using Azure;
+using System.Collections;
+using System.Reflection.Metadata;
 
 namespace AzureBlob.API.Service
 {
@@ -52,7 +54,7 @@ namespace AzureBlob.API.Service
 
             _blobServiceClient = new BlobServiceClient($"DefaultEndpointsProtocol={this._azstore.DefaultEndpointsProtocol};" +
                 $"AccountName={this._azstore.AccountName};AccountKey={this._azstore.AccountKey};EndpointSuffix={this._azstore.EndpointSuffix};");
-           // _containerClient = _blobServiceClient.GetBlobContainerClient(this.Container);
+            // _containerClient = _blobServiceClient.GetBlobContainerClient(this.Container);
 
         }
 
@@ -99,12 +101,22 @@ namespace AzureBlob.API.Service
             return azureResponse;
         }
 
+
+        public async Task<Response> DeleteBlobAsync(string filename)
+        {
+            Response resp;
+            _containerClient = _blobServiceClient.GetBlobContainerClient(this.Container);
+            resp = await _containerClient.DeleteBlobAsync(filename, DeleteSnapshotsOption.IncludeSnapshots);
+            return resp;
+        }
+
         public async Task<List<FileProperties>> GetUploadedBlobs()
         {
             //var items = new List<BlobItem>();
             _containerClient = _blobServiceClient.GetBlobContainerClient(this.Container);
             var filepropslist = new List<FileProperties>();
             var uploadedFiles = _containerClient.GetBlobsAsync(BlobTraits.None, BlobStates.None);
+
             await foreach (BlobItem file in uploadedFiles)
             {
 
