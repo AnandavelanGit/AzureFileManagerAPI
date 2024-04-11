@@ -16,7 +16,7 @@ namespace FileManagerAPI.Controllers
 {
 
     [ApiController]
-    // [Authorize]
+    [Authorize]
     public class FileuploadToBlobController : ControllerBase
     {
 
@@ -35,8 +35,9 @@ namespace FileManagerAPI.Controllers
 
         [HttpPost]
         [Route("/UploadFiles")]
-        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
-
+       
+        //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+        [RequiredScope("FileAPIReadWrite")]
         // [Authorize(Roles = "FileManager.ReadWrite")]
         public async Task<IActionResult> UploadBlobs(List<IFormFile> files)
         {
@@ -46,8 +47,8 @@ namespace FileManagerAPI.Controllers
 
         [HttpPost]
         [Route("/UploadAFile")]
-        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
-        //[Authorize(Roles = "FileManager.ReadWrite")]
+        //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+        [RequiredScope("FileAPIReadWrite")]
         public async Task<IActionResult> UploadBlob(IFormFile file, [FromForm] string container)
         {
             _service.Container = container;
@@ -59,7 +60,7 @@ namespace FileManagerAPI.Controllers
 
         [HttpDelete]
         [Route("/DeleteFile")]
-        [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+        [RequiredScope("FileAPIReadWrite")]
         //[Authorize(Roles = "FileManager.ReadWrite")]
         public async Task<IActionResult> DeleteBlob(string filename, string container)
         {
