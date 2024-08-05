@@ -48,8 +48,12 @@ namespace FileManagerAPI.Services
                 //Console.WriteLine($"{qEntity.GetString("Product")}: {qEntity.GetDouble("Price")}");
             }
 
+            Random rnd = new Random();
+            int iRandom = rnd.Next(0, azureQuestions.Count - 2);
+            
 
-            return azureQuestions;
+
+            return azureQuestions.GetRange(iRandom, 2);
 
         }
 
