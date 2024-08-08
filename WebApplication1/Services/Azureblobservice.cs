@@ -72,7 +72,9 @@ namespace AzureBlob.API.Service
                  }
             };
             var client = new SecretClient(new Uri(_azkeyvault.Url),
-                            new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId= "4a65243b-ac45-4d96-a9fb-6fb09623eb65" }), options);
+                 new DefaultAzureCredential(), options);
+
+            // new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId= "4a65243b-ac45-4d96-a9fb-6fb09623eb65" }), options);
 
             KeyVaultSecret secret = client.GetSecret(_azkeyvault.KeyName);
 
