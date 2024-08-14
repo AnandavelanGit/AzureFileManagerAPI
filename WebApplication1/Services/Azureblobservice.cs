@@ -123,7 +123,7 @@ namespace AzureBlob.API.Service
             {
 
                 filepropslist.Add(
-                    new FileProperties() { Name = file.Name, UploadedDate = file.Properties.CreatedOn, UploadedBy = file.Properties.CopyId, Size = file.Properties.ContentLength / 1000 }
+                    new FileProperties() {Container = this.Container, Name = file.Name, UploadedDate = file.Properties.CreatedOn, UploadedBy = file.Properties.CopyId, Size = file.Properties.ContentLength / 1000 }
                     );
             }
 

@@ -7,6 +7,7 @@ namespace FileManagerAPI
 {
     public class FileProperties
     {
+        public string Container { get; set; }
         public string Name { get; set; }
 
         public DateTimeOffset ? UploadedDate { get; set; }
